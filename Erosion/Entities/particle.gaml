@@ -7,12 +7,28 @@ species particle skills: [moving] { //parallel: true use_individual_shapes: fals
 	string type;
 	float power <- 0.0;
 	float zz <- 0.0;
+	DEM dd;
 
+			float diff<-0.1;
 	reflex moving {
 		do wander amplitude: 45.0 speed: 0.5;
 		DEM d <- DEM at location;
 		if (d != nil) {
-			zz <- (d.grid_value - 95);
+			if (dd = nil or dd != d) {
+				dd <- d;
+				diff<-abs(zz-(dd.grid_value-95))/2;
+//				write diff;
+			}
+				ask dd{if(grid_value>96){grid_value<-grid_value-0.1;}}
+			//			zz <- (d.grid_value - 95);
+			if (zz > (dd.grid_value - 95)) {
+				zz <- zz - diff;
+			}
+
+			if (zz < (dd.grid_value - 95)) {
+				zz <- zz + diff;
+			}
+
 		}
 
 	}
